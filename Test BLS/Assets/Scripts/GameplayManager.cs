@@ -9,15 +9,11 @@ public class GameplayManager : MonoBehaviour
 {
     [SerializeField] GameObject fadeScreen;
 
-    public InputMenu inputMenu;
-
     private void Awake()
     {
         fadeScreen.GetComponent<Animator>().enabled = true;
         fadeScreen.GetComponent<Animator>().Play("fade_out");
 
-        inputMenu = new InputMenu();
-       
     }
 
 }

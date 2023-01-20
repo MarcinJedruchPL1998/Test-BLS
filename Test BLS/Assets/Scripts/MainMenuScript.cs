@@ -37,10 +37,10 @@ public class MainMenuScript : MonoBehaviour
         int bestScore = ScoresData.LoadBestScore();
         int lastScore = ScoresData.LoadLastScore();
 
-        if (bestScore == 0) best_score_text.text = "---";
+        if (bestScore == 0) best_score_text.text = "0";
         else best_score_text.text = bestScore.ToString();
 
-        if (lastScore == 0) last_score_text.text = "---";
+        if (lastScore == 0) last_score_text.text = "0";
         else last_score_text.text = lastScore.ToString();
     }
 

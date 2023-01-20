@@ -9,10 +9,14 @@ public class PlayerControll : MonoBehaviour
     [SerializeField] float speed = 2f;
     [SerializeField] float screenBoundsOffset = 0.5f;
 
+    [SerializeField] GameplayManager gameplayManager;
+
     Vector2 moveDirection;
     Vector2 screenBounds;
 
     Animator anim;
+
+    public bool beenCollision;
 
     void Awake()
     {
@@ -64,5 +68,23 @@ public class PlayerControll : MonoBehaviour
         {
             anim.Play("playerPlane_fly_forward");
         }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.tag == "EnemyPlane" && !beenCollision)
+        {
+            anim.Rebind();
+            anim.Update(0);
+            anim.Play("playerPlane_collision");
+            gameplayManager.RemoveLive();
+
+            beenCollision = true;
+        }
+    }
+
+    public void BeenCollision()
+    {
+        beenCollision = false;
     }
 }

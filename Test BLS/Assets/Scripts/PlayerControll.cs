@@ -12,6 +12,8 @@ public class PlayerControll : MonoBehaviour
     Vector2 moveDirection;
     Vector2 screenBounds;
 
+    Animator anim;
+
     void Awake()
     {
         inputMenu = new InputMenu();
@@ -21,6 +23,8 @@ public class PlayerControll : MonoBehaviour
 
     private void Start()
     {
+        anim = GetComponent<Animator>();
+
         screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
     }
 
@@ -50,15 +54,15 @@ public class PlayerControll : MonoBehaviour
 
         if(moveDirection.y > 0)
         {
-            GetComponent<Animator>().Play("playerPlane_fly_up");
+            anim.Play("playerPlane_fly_up");
         }
         else if(moveDirection.y < 0)
         {
-            GetComponent<Animator>().Play("playerPlane_fly_down");
+            anim.Play("playerPlane_fly_down");
         }
         else
         {
-            GetComponent<Animator>().Play("playerPlane_fly_forward");
+            anim.Play("playerPlane_fly_forward");
         }
     }
 }

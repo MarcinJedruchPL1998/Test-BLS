@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class EnemyPlane : MonoBehaviour
 {
-    [SerializeField] float speed;
+    public PlayerControll playerControll;
 
-    public GameplayManager gameplayManager;
+    [SerializeField] GameplayManager gameplayManager;
+    
+    [SerializeField] float speed;
 
     Animator anim;
     BoxCollider2D bc2d;
@@ -18,7 +20,6 @@ public class EnemyPlane : MonoBehaviour
         anim.Play("enemyPlane" + randomAnim + "_fly");
 
         bc2d = GetComponent<BoxCollider2D>();
-
     }
 
     
@@ -35,7 +36,7 @@ public class EnemyPlane : MonoBehaviour
             bc2d.enabled = false;
             anim.Play("enemyPlane_explosion");
 
-            gameplayManager.AddPoint();
+            playerControll.AddPoint(10);
         }
 
         if(collision.gameObject.tag == "destroyBorder")

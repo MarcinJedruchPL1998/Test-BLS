@@ -11,12 +11,16 @@ public class PlayerControll : MonoBehaviour
 
     [SerializeField] GameplayManager gameplayManager;
 
+    public int playerLives = 3;
+    public int playerPoints;
+
     Vector2 moveDirection;
     Vector2 screenBounds;
 
     Animator anim;
 
-    public bool beenCollision;
+    bool beenCollision;
+    bool gameOver;
 
     void Awake()
     {
@@ -56,17 +60,20 @@ public class PlayerControll : MonoBehaviour
 
         transform.Translate(moveDirection * speed * Time.deltaTime);
 
-        if(moveDirection.y > 0)
+        if(!gameOver)
         {
-            anim.Play("playerPlane_fly_up");
-        }
-        else if(moveDirection.y < 0)
-        {
-            anim.Play("playerPlane_fly_down");
-        }
-        else
-        {
-            anim.Play("playerPlane_fly_forward");
+            if (moveDirection.y > 0)
+            {
+                anim.Play("playerPlane_fly_up");
+            }
+            else if (moveDirection.y < 0)
+            {
+                anim.Play("playerPlane_fly_down");
+            }
+            else
+            {
+                anim.Play("playerPlane_fly_forward");
+            }
         }
     }
 
@@ -75,16 +82,53 @@ public class PlayerControll : MonoBehaviour
         if(collision.gameObject.tag == "EnemyPlane" && !beenCollision)
         {
             anim.Rebind();
-            anim.Update(0);
             anim.Play("playerPlane_collision");
-            gameplayManager.RemoveLive();
 
+            RemoveLive();
+            AddPoint(10);
+           
             beenCollision = true;
         }
+    }
+
+    public void RemoveLive()
+    {
+        playerLives--;
+        gameplayManager.LoadScoresAndLives();
+
+        if(playerLives < 1)
+        {
+            gameOver = true;
+            anim.Play("playerPlane_destroyed");
+        }
+       
+    }
+
+    public void PlaneDestroyed()
+    {
+        gameplayManager.GameOver();
+    }
+
+    public void AddPoint(int points)
+    {
+        playerPoints += points;
+        gameplayManager.LoadScoresAndLives();
     }
 
     public void BeenCollision()
     {
         beenCollision = false;
     }
+
+    public void ResetPlayer()
+    {
+        transform.position = new Vector2(transform.position.x, 0f);
+        playerLives = 3;
+        playerPoints = 0;
+        gameplayManager.LoadScoresAndLives();
+
+        gameOver = false;
+        
+    }
+
 }

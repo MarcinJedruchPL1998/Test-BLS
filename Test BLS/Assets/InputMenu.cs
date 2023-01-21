@@ -133,6 +133,54 @@ public partial class @InputMenu : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 }
             ]
+        },
+        {
+            ""name"": ""GameplayInput"",
+            ""id"": ""0ef0b79a-cbfe-4934-a726-24ed7e64a31e"",
+            ""actions"": [
+                {
+                    ""name"": ""Restart"",
+                    ""type"": ""Button"",
+                    ""id"": ""1b093b10-7a05-431e-8134-4dc59064b7dd"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Exit"",
+                    ""type"": ""Button"",
+                    ""id"": ""2e6bdb50-ed4d-45e3-a901-0ab262d9b4ed"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""be81209a-c261-4085-83ef-370eb261eee7"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardAndMouse"",
+                    ""action"": ""Restart"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""339e0cd6-6f89-4c05-a512-2927929c69e1"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardAndMouse"",
+                    ""action"": ""Exit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -160,6 +208,10 @@ public partial class @InputMenu : IInputActionCollection2, IDisposable
         // PlayerInput
         m_PlayerInput = asset.FindActionMap("PlayerInput", throwIfNotFound: true);
         m_PlayerInput_Movement = m_PlayerInput.FindAction("Movement", throwIfNotFound: true);
+        // GameplayInput
+        m_GameplayInput = asset.FindActionMap("GameplayInput", throwIfNotFound: true);
+        m_GameplayInput_Restart = m_GameplayInput.FindAction("Restart", throwIfNotFound: true);
+        m_GameplayInput_Exit = m_GameplayInput.FindAction("Exit", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -281,6 +333,47 @@ public partial class @InputMenu : IInputActionCollection2, IDisposable
         }
     }
     public PlayerInputActions @PlayerInput => new PlayerInputActions(this);
+
+    // GameplayInput
+    private readonly InputActionMap m_GameplayInput;
+    private IGameplayInputActions m_GameplayInputActionsCallbackInterface;
+    private readonly InputAction m_GameplayInput_Restart;
+    private readonly InputAction m_GameplayInput_Exit;
+    public struct GameplayInputActions
+    {
+        private @InputMenu m_Wrapper;
+        public GameplayInputActions(@InputMenu wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Restart => m_Wrapper.m_GameplayInput_Restart;
+        public InputAction @Exit => m_Wrapper.m_GameplayInput_Exit;
+        public InputActionMap Get() { return m_Wrapper.m_GameplayInput; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(GameplayInputActions set) { return set.Get(); }
+        public void SetCallbacks(IGameplayInputActions instance)
+        {
+            if (m_Wrapper.m_GameplayInputActionsCallbackInterface != null)
+            {
+                @Restart.started -= m_Wrapper.m_GameplayInputActionsCallbackInterface.OnRestart;
+                @Restart.performed -= m_Wrapper.m_GameplayInputActionsCallbackInterface.OnRestart;
+                @Restart.canceled -= m_Wrapper.m_GameplayInputActionsCallbackInterface.OnRestart;
+                @Exit.started -= m_Wrapper.m_GameplayInputActionsCallbackInterface.OnExit;
+                @Exit.performed -= m_Wrapper.m_GameplayInputActionsCallbackInterface.OnExit;
+                @Exit.canceled -= m_Wrapper.m_GameplayInputActionsCallbackInterface.OnExit;
+            }
+            m_Wrapper.m_GameplayInputActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Restart.started += instance.OnRestart;
+                @Restart.performed += instance.OnRestart;
+                @Restart.canceled += instance.OnRestart;
+                @Exit.started += instance.OnExit;
+                @Exit.performed += instance.OnExit;
+                @Exit.canceled += instance.OnExit;
+            }
+        }
+    }
+    public GameplayInputActions @GameplayInput => new GameplayInputActions(this);
     private int m_KeyboardAndMouseSchemeIndex = -1;
     public InputControlScheme KeyboardAndMouseScheme
     {
@@ -297,5 +390,10 @@ public partial class @InputMenu : IInputActionCollection2, IDisposable
     public interface IPlayerInputActions
     {
         void OnMovement(InputAction.CallbackContext context);
+    }
+    public interface IGameplayInputActions
+    {
+        void OnRestart(InputAction.CallbackContext context);
+        void OnExit(InputAction.CallbackContext context);
     }
 }

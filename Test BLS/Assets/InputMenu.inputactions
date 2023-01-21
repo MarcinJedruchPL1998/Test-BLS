@@ -111,6 +111,54 @@
                     "isPartOfComposite": true
                 }
             ]
+        },
+        {
+            "name": "GameplayInput",
+            "id": "0ef0b79a-cbfe-4934-a726-24ed7e64a31e",
+            "actions": [
+                {
+                    "name": "Restart",
+                    "type": "Button",
+                    "id": "1b093b10-7a05-431e-8134-4dc59064b7dd",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Exit",
+                    "type": "Button",
+                    "id": "2e6bdb50-ed4d-45e3-a901-0ab262d9b4ed",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "be81209a-c261-4085-83ef-370eb261eee7",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardAndMouse",
+                    "action": "Restart",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "339e0cd6-6f89-4c05-a512-2927929c69e1",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardAndMouse",
+                    "action": "Exit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [

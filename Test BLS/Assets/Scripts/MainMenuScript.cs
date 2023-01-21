@@ -34,14 +34,21 @@ public class MainMenuScript : MonoBehaviour
 
     public void LoadScores() //Load best score and last score from ScoresData
     {
-        int bestScore = ScoresData.LoadBestScore();
         int lastScore = ScoresData.LoadLastScore();
+        int bestScore = ScoresData.LoadBestScore();
 
         if (bestScore == 0) best_score_text.text = "0";
         else best_score_text.text = bestScore.ToString();
 
         if (lastScore == 0) last_score_text.text = "0";
         else last_score_text.text = lastScore.ToString();
+
+
+        if(bestScore < lastScore)
+        {
+            bestScore = lastScore;
+            best_score_text.text = bestScore.ToString();
+        }
     }
 
     public void AnyButtonClicked()

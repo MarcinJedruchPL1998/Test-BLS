@@ -48,3 +48,6 @@ TagManager:
   - name: FadeScreen
     uniqueID: 2914418481
     locked: 0
+  - name: GameOverScreen
+    uniqueID: 4131089661
+    locked: 0

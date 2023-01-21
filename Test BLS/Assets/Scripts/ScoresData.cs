@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ScoresData : MonoBehaviour
+public class ScoresData
 {
    
     public static int LoadBestScore()
@@ -14,6 +14,7 @@ public class ScoresData : MonoBehaviour
     public static void SaveBestScore(int best_score)
     {
         PlayerPrefs.SetInt("BestScore", best_score);
+        PlayerPrefs.Save();
     }
 
     public static int LoadLastScore()
@@ -25,5 +26,6 @@ public class ScoresData : MonoBehaviour
     public static void SaveLastScore(int last_score)
     {
         PlayerPrefs.SetInt("LastScore", last_score);
+        PlayerPrefs.Save();
     }
 }

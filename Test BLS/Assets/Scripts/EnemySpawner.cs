@@ -8,8 +8,9 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] float spawnEnemiesTime;
     [SerializeField] Vector2[] enemiesFlyPath;
 
-    [SerializeField] GameplayManager gameplayManager;
     [SerializeField] GameObject canvas;
+
+    [SerializeField] PlayerControll playerControll;
 
     Vector2 screenBoundary;
 
@@ -44,9 +45,11 @@ public class EnemySpawner : MonoBehaviour
             }
 
             GameObject enemy = Instantiate(enemyPlane, enemiesFlyPath[currentRandomEnemyPath], Quaternion.identity, canvas.transform);
-            enemy.GetComponent<EnemyPlane>().gameplayManager = gameplayManager;
+            enemy.GetComponent<EnemyPlane>().playerControll = playerControll;
+           
         }
         yield return new WaitForSeconds(spawnEnemiesTime);
         StartCoroutine(SpawnEnemies());
     }
+
 }

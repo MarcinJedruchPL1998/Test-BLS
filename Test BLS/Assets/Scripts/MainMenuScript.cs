@@ -43,7 +43,7 @@ public class MainMenuScript : MonoBehaviour
         if (lastScore == 0) last_score_text.text = "0";
         else last_score_text.text = lastScore.ToString();
 
-
+        //Set new score record
         if(bestScore < lastScore)
         {
             bestScore = lastScore;

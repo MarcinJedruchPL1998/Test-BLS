@@ -33,6 +33,7 @@ public class PlayerControll : MonoBehaviour
     {
         anim = GetComponent<Animator>();
 
+        //Calculate screen boundaries positions
         screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
     }
 
@@ -62,15 +63,15 @@ public class PlayerControll : MonoBehaviour
 
         if(!gameOver)
         {
-            if (moveDirection.y > 0)
+            if (moveDirection.y > 0) //if player plane fly up (W or Arrow UP)
             {
                 anim.Play("playerPlane_fly_up");
             }
-            else if (moveDirection.y < 0)
+            else if (moveDirection.y < 0) //if player plane fly down (S or Arrow DOWN)
             {
                 anim.Play("playerPlane_fly_down");
             }
-            else
+            else //if player plane fly forward (no key down)
             {
                 anim.Play("playerPlane_fly_forward");
             }
@@ -87,7 +88,7 @@ public class PlayerControll : MonoBehaviour
             RemoveLive();
             AddPoint(10);
            
-            beenCollision = true;
+            beenCollision = true; //Lock collisions with enemy planes for a while
         }
     }
 
@@ -115,7 +116,7 @@ public class PlayerControll : MonoBehaviour
         gameplayManager.LoadScoresAndLives();
     }
 
-    public void BeenCollision()
+    public void BeenCollision() //Animation Event, set "beenCollision" to false to allow next collisions
     {
         beenCollision = false;
     }

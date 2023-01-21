@@ -18,11 +18,15 @@ public class GameplayManager : MonoBehaviour
 
     [SerializeField] PlayerControll playerControll;
 
+    [SerializeField] float time;
+    [SerializeField] Text timerText;
+    float remainingTime;
+
     Animator anim;
 
     bool gameOver;
 
-    public GameObject[] enemies;
+    GameObject[] enemies;
 
     private void Awake()
     {
@@ -30,6 +34,8 @@ public class GameplayManager : MonoBehaviour
         inputMenu.GameplayInput.Restart.performed += ctx => RestartGame();
         inputMenu.GameplayInput.Exit.performed += ctx => ExitGame();
 
+
+        //Fade out the screen after loading scene
         anim = fadeScreen.GetComponent<Animator>();
         anim.enabled = true;
         anim.Play("fade_out");
@@ -49,8 +55,9 @@ public class GameplayManager : MonoBehaviour
 
     private void Start()
     {
+        remainingTime = time;
+
         LoadScoresAndLives();
-        Timer();
     }
 
 
@@ -60,12 +67,31 @@ public class GameplayManager : MonoBehaviour
         scoresText.text = playerControll.playerPoints.ToString();
     }
 
-    public void Timer()
+    private void Update()
     {
-
+        Timer();
     }
 
-    public void GameOver()
+    public void Timer() //Set the timer counting down the game time
+    {
+        if(remainingTime > 0)
+        {
+            remainingTime -= Time.deltaTime;
+        }
+
+        else
+        {
+            remainingTime = 0;
+            gameOver = true;
+            ExitGame();
+        }
+
+        float minutes = Mathf.FloorToInt(remainingTime / 60);
+        float seconds = Mathf.FloorToInt(remainingTime % 60);
+        timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+    }
+
+    public void GameOver() //Animation Event after destroying player plane, pause the game and show Game Over Screen
     {
         gameOver = true;
         gameOverScreen.SetActive(true);
@@ -76,6 +102,7 @@ public class GameplayManager : MonoBehaviour
     {
         if(gameOver)
         {
+            //If player want to play again, find all enemy planes and destroy them!
             enemies = GameObject.FindGameObjectsWithTag("EnemyPlane");
             foreach(GameObject e in enemies)
             {
@@ -85,9 +112,10 @@ public class GameplayManager : MonoBehaviour
             playerControll.ResetPlayer();
             gameOverScreen.SetActive(false);
             gameOver = false;
-            Time.timeScale = 1f;
+            Time.timeScale = 1f; //Unpause game
+            remainingTime = time; //Reset the timer
 
-            Array.Resize(ref enemies, 0);
+            Array.Resize(ref enemies, 0); //Clear found enemy planes from memory
         }
     }
 
@@ -96,6 +124,8 @@ public class GameplayManager : MonoBehaviour
         if(gameOver)
         {
             Time.timeScale = 1f;
+
+            //Save player points and check if it's higher than best score
             ScoresData.SaveLastScore(playerControll.playerPoints);
             int bestScore = ScoresData.LoadBestScore();
             if(playerControll.playerPoints > bestScore)
@@ -103,6 +133,7 @@ public class GameplayManager : MonoBehaviour
                 bestScore = playerControll.playerPoints;
                 ScoresData.SaveBestScore(bestScore);
             }
+
             anim.Play("fade_in");
             StartCoroutine(LoadMainMenu());
         }

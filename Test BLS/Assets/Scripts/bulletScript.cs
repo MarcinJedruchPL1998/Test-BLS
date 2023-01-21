@@ -13,6 +13,8 @@ public class bulletScript : MonoBehaviour
 
     IEnumerator DestroyAfterTime()
     {
+        //Destroy the bullet after time (if no hits)
+
         yield return new WaitForSeconds(destroyTime);
         Destroy(gameObject);
     }
